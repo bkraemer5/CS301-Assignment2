@@ -2,7 +2,7 @@
 #include <fstream>
 #include <cstring>
 #include <string>
-#include "ExtendableVector.h"
+#include <vector>
 
 using namespace std;
 
@@ -11,71 +11,62 @@ struct Person {
   float balance;
 };
 
-void display(ExtendableVector<Person>  v, int n);
-void findRichest(ExtendableVector<Person> v, int n);
+void display(vector<Person>, int);
+void findRichest(vector<Person>, int);
 
 int main() {
+  cout << "in main" << endl;
 
-  int fileSize = 0;
-  string line;
-
+  vector<Person> people;
+ 
   ifstream inData;
   inData.open("data.txt");
-  while (inData) {
-    getline(inData, line);
-    fileSize++;
-  } 
-  inData.close();
-
-  ExtendableVector<Person> people(fileSize);
-
-  inData.open("data.txt");
-  char fname[9];
-  char lname[9];
+  string fname;
+  string lname;
+  string fullname;
+  string r;
   char n[20];
   float b;
   Person p;
-  for (int i = 0; i < fileSize; i++) {
-    cin >> fname;
-    cin >> lname;
-    cin >> b;
-    strcat(n, fname);
-    strcat(n, " ");
-    strcat(n, lname);
-    strcat(p.name, n);
+  while (!inData.eof()) {
+    inData  >> fname;
+    inData >> lname;
+    inData >> b;
+    fullname = fname + " " + lname;
+    strcpy(p.name, fullname.c_str());
     p.balance = b;
-    people.insert(i, p);
+    people.push_back(p);
+    getline(inData, r); 
   }
   inData.close();
+
+  cout << "file read" << endl;
   
-  display(people, fileSize);
-  findRichest(people, fileSize);
+  display(people, people.size());
+  findRichest(people, people.size());
   return 0;
 }
 
-void display(ExtendableVector<Person> v, int n) {
+void display(vector<Person> v, int n) {
   cout << "\tName\tBalance" << endl;
   cout << "\t--------------------" << endl;
   for (int i = 0; i < n; i++) {
-    for (int j = 0; j < strlen(v.at(i).name); j++) {
-      cout << v.at(i).name[j];
-    }
-    cout << " " << v.at(i).balance << endl;
+    cout << "\t" << v[i].name << " " << v[i].balance << endl;
   }
 }
 
-void findRichest(ExtendableVector<Person> v, int n) {
+void findRichest(vector<Person> v, int n) {
   float highest = 0;
   int highestIndex = 0;
   for (int i = 0; i < v.size(); i++) {
-    if (v.at(i).balance > highest) {
-      highest = v.at(i).balance;
+    if (v[i].balance > highest) {
+      highest = v[i].balance;
       highestIndex = i;
     } 
   }
   cout << "The customer with the maximum balance is ";
-  for (int i = 0; i < strlen(v.at(highestIndex).name); i++) {
-    cout << v.at(highestIndex).name[i];
+  for (int i = 0; i < strlen(v[highestIndex].name); i++) {
+    cout << v[highestIndex].name[i];
   } 
   cout << endl;
 }
