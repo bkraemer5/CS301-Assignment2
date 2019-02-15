@@ -13,12 +13,13 @@ struct Person {
 
 void display(vector<Person>, int);
 void findRichest(vector<Person>, int);
+void deposit(string, vector<Person> &v, int);
+void newCopy(const char*,vector<Person>, int);
 
 int main() {
   cout << "in main" << endl;
 
   vector<Person> people;
- 
   ifstream inData;
   inData.open("data.txt");
   string fname;
@@ -44,6 +45,9 @@ int main() {
   
   display(people, people.size());
   findRichest(people, people.size());
+  deposit("Maria Brown", people, people.size());
+  newCopy("data.txt", people, people.size());
+  display(people, people.size());
   return 0;
 }
 
@@ -69,4 +73,35 @@ void findRichest(vector<Person> v, int n) {
     cout << v[highestIndex].name[i];
   } 
   cout << endl;
+}
+
+void deposit(string cust, vector<Person> &v, int n) {
+  float deposit;
+  cout << "Enter your full name to deposit money: " << cust << endl;
+  cust = cust.c_str();
+  int found = -1;
+  for (int i = 0; i < n; i++) {
+    if (cust == v[i].name) {
+      found = i;
+    }
+  }
+  if (found == -1) {
+    cout << "Customer not found!" << endl;
+  }
+  else {
+    cout << cust << ", how much would you like to deposit? ";
+    cin >> deposit;
+    v[found].balance += deposit;
+    cout << cust << ", your new balance is " << v[found].balance << endl;
+  }
+}
+
+void newCopy(const char* f, vector<Person> v, int n) {
+  ofstream data;
+  data.open(f);
+  cout << "NEW COPY" << endl;
+  for (int i = 0; i < n-1; i++) {
+    data << v[i].name << " " << v[i].balance << endl;
+  }
+  data.close();
 }
